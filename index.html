@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday, Siddhi! - A Grand Display</title>
+    <title>Happy Birthday, Siddhi! - A Grand Firework Display</title>
     <style>
         /* Aesthetic and Celebratory Styles (Dark/Aesthetic theme) */
         body {
@@ -166,11 +166,12 @@
     </div>
 
     <script>
-        // --- High-Quality Firework Particle System ---
+        // --- High-Quality Firework Particle System with Reflection ---
 
         const canvas = document.getElementById('fireworkCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
+        const waterLevel = 0.7; // Water surface starts at 70% down the screen
 
         function resizeCanvas() {
             width = canvas.width = window.innerWidth;
@@ -181,8 +182,10 @@
 
         const fireworks = [];
         const particles = [];
+        const reflections = []; // For particles reflected on water
         const gravity = 0.08;
-        const trailLength = 0.5;
+        const trailLength = 0.2; // Controls the fade effect for rockets
+        const particleTrailLength = 0.05; // Fade for explosion particles
 
         // Utility to get a random aesthetic color
         function randomColor() {
@@ -192,19 +195,22 @@
 
         // Particle Class (for the actual sparks)
         class Particle {
-            constructor(x, y, color, speed, angle, isRocket = false) {
+            constructor(x, y, color, speed, angle, isRocket = false, isReflection = false) {
                 this.x = x;
                 this.y = y;
                 this.color = color;
                 this.isRocket = isRocket;
-                this.life = isRocket ? 300 : Math.random() * 50 + 20;
+                this.isReflection = isReflection;
+                this.life = isRocket ? 300 : Math.random() * 60 + 30; // Longer life for particles
+                this.originalY = y; // To calculate reflection starting point
 
                 this.velocity = {
                     x: Math.cos(angle) * speed,
                     y: Math.sin(angle) * speed
                 };
-                this.friction = 0.99;
-                this.alpha = 1;
+                this.friction = isReflection ? 0.97 : 0.99; // More drag for reflections
+                this.alpha = isReflection ? 0.6 : 1; // Reflections start fainter
+                this.radius = Math.random() * 2 + 1; // Varying particle size
             }
 
             update() {
@@ -215,16 +221,36 @@
                 this.y += this.velocity.y;
                 
                 if (!this.isRocket) {
-                    this.alpha -= 1 / this.life;
+                    this.alpha -= (this.isReflection ? 0.008 : 0.012); // Reflections fade faster
                 }
                 this.life--;
+
+                // If a non-reflection particle hits water, create its reflection
+                if (!this.isReflection && this.y >= height * waterLevel && !this.reflected) {
+                    this.reflected = true; // Prevent multiple reflections
+                    // Calculate starting point and initial velocity for reflection
+                    const reflectionY = height * waterLevel + (height * waterLevel - this.originalY);
+                    const reflectionVelocityY = -this.velocity.y * 0.5; // Reflection velocity is less
+                    const reflectionVelocityX = this.velocity.x * 0.8;
+
+                    reflections.push(new Particle(
+                        this.x, 
+                        height * waterLevel + (this.y - height * waterLevel), // Start reflection at water line
+                        this.color, 
+                        Math.sqrt(reflectionVelocityX * reflectionVelocityX + reflectionVelocityY * reflectionVelocityY), 
+                        Math.atan2(reflectionVelocityY, reflectionVelocityX), 
+                        false, true // Not a rocket, IS a reflection
+                    ));
+                }
             }
 
             draw() {
                 ctx.save();
-                ctx.globalAlpha = this.alpha;
+                ctx.globalAlpha = Math.max(0, this.alpha); // Ensure alpha doesn't go below 0
                 ctx.fillStyle = this.color;
-                ctx.fillRect(this.x, this.y, 2, 2);
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
                 ctx.restore();
             }
         }
@@ -234,9 +260,9 @@
             constructor() {
                 this.x = Math.random() * width * 0.8 + width * 0.1;
                 this.y = height;
-                this.targetY = Math.random() * height * 0.5;
+                this.targetY = Math.random() * height * 0.5; // Explode higher
                 this.color = randomColor();
-                this.speed = Math.random() * 3 + 4;
+                this.speed = Math.random() * 3 + 5; // Faster rockets
                 this.exploded = false;
                 this.angle = -Math.PI / 2;
                 
@@ -255,7 +281,7 @@
             }
             
             explode() {
-                const count = 120;
+                const count = Math.floor(Math.random() * 150) + 100; // Even more particles for bigger explosions
                 const explosionSpeed = Math.random() * 4 + 2;
                 for (let i = 0; i < count; i++) {
                     const angle = (Math.PI * 2) * (i / count);
@@ -268,43 +294,56 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // Dark background with semi-transparent clear for the trail effect
-            ctx.fillStyle = `rgba(13, 13, 26, ${trailLength})`;
+            // Clear with a darker, more opaque fill for better trail effects and darker sky
+            ctx.fillStyle = `rgba(0, 0, 0, 0.15)`; 
             ctx.fillRect(0, 0, width, height);
 
-            // Update and draw fireworks
+            // Draw the water surface
+            const waterGradient = ctx.createLinearGradient(0, height * waterLevel, 0, height);
+            waterGradient.addColorStop(0, 'rgba(0, 50, 100, 0.4)'); // Dark blue/cyan for water
+            waterGradient.addColorStop(1, 'rgba(0, 20, 40, 0.6)');
+            ctx.fillStyle = waterGradient;
+            ctx.fillRect(0, height * waterLevel, width, height * (1 - waterLevel));
+
+            // Update and draw fireworks (rockets)
             for (let i = fireworks.length - 1; i >= 0; i--) {
                 fireworks[i].update();
-                // Only draw the rocket trail if it hasn't exploded
                 if (!fireworks[i].exploded) {
                     fireworks[i].rocket.draw();
                 }
-                
-                if (fireworks[i].exploded) {
-                    // Remove the rocket object after a small delay to ensure explosion completes
-                    if (particles.every(p => p.alpha < 0.9)) { 
-                        fireworks.splice(i, 1);
-                    }
+                // Remove the rocket if exploded and all its particles have faded/gone
+                if (fireworks[i].exploded && fireworks[i].rocket.alpha <= 0.05) {
+                    fireworks.splice(i, 1);
                 }
             }
 
-            // Update and draw particles
+            // Update and draw explosion particles
             for (let i = particles.length - 1; i >= 0; i--) {
-                particles[i].update();
-                particles[i].draw();
-                
-                if (particles[i].alpha <= 0 || particles[i].life <= 0) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+                if (p.alpha <= 0 || p.life <= 0) {
                     particles.splice(i, 1);
+                }
+            }
+
+            // Update and draw reflection particles
+            for (let i = reflections.length - 1; i >= 0; i--) {
+                const r = reflections[i];
+                r.update();
+                r.draw();
+                if (r.alpha <= 0 || r.life <= 0) {
+                    reflections.splice(i, 1);
                 }
             }
         }
 
         // Periodically launch new fireworks
         setInterval(() => {
-            if (fireworks.length < 7) { 
+            if (fireworks.length < 10) { // Allow more concurrent fireworks for a grander show
                 fireworks.push(new Firework());
             }
-        }, 400); // Launch a new rocket frequently
+        }, 300); // Launch a new rocket very frequently
 
         // Start the animation
         animate();
