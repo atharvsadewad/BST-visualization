@@ -1,129 +1,133 @@
-<!DOCTYPE html>
+x<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday, Siddhi! - A Grand Firework Display</title>
+    <title>Happy Birthday, Siddhi! </title>
     <style>
-        /* Aesthetic and Celebratory Styles (Dark/Aesthetic theme) */
+        /* Aesthetic and Celebratory Styles */
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background: #0d0d1a; /* Very dark night sky for firework contrast */
-            font-family: 'Poppins', sans-serif; /* Modern, aesthetic font */
+            overflow: hidden; /* Hide scrollbars for the full-screen effect */
+            background: linear-gradient(135deg, #f06, #4a90e2, #f06); /* Gradient background */
+            font-family: 'Georgia', serif;
             color: white;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* Canvas for the Firework Animation */
-        #fireworkCanvas {
+        /* Canvas for the Confetti/Firecracker Effect */
+        #birthdayCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; 
+            z-index: 1; /* Below the text content */
         }
 
         /* Main Greeting Container */
         #greetingContainer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
+            position: relative;
+            z-index: 10; /* Above the canvas */
             text-align: center;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.6); /* Sleek, dark overlay */
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4); /* Slightly transparent overlay for readability */
             border-radius: 15px;
-            border: 2px solid #9c00ff; /* Purple/Magenta aesthetic glow */
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 40px rgba(156, 0, 255, 0.8), 0 0 15px rgba(255, 255, 255, 0.5);
-            max-width: 90vw;
-            animation: popIn 1.5s ease-out;
+            backdrop-filter: blur(5px); /* Aesthetic blur effect */
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.8); /* Golden glow */
+            animation: fadeIn 3s ease-in-out;
         }
 
-        @keyframes popIn {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         /* Titles and Text Styling */
         h1 {
-            font-size: 4.5em;
+            font-size: 5em;
             margin-bottom: 0.1em;
-            color: #ff99ff; /* Bright aesthetic pink/purple */
-            text-shadow: 0 0 10px #ff00ff, 0 0 5px #fff;
+            color: #ffeb3b; /* Yellow/Gold for celebration */
+            text-shadow: 2px 2px 4px #000;
+            animation: pulse 1.5s infinite alternate; /* Gentle pulsing effect */
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
         }
 
         h2 {
-            font-size: 1.8em;
-            color: #00ffff; /* Cyan aesthetic touch */
+            font-size: 2em;
+            color: #fff;
             margin-top: 0;
-            text-shadow: 1px 1px 2px #000;
+            text-shadow: 1px 1px 3px #000;
         }
         
         /* Scrollable Message Box */
         #messageBox {
-            max-height: 25vh; /* Ensures scroll works */
+            max-height: 30vh;
             max-width: 80vw;
-            overflow-y: scroll;
+            overflow-y: auto; /* Make it scrollable */
             text-align: left;
             margin-top: 20px;
             padding: 15px;
-            border: 1px solid #00ffff;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            line-height: 1.7;
+            border: 2px solid #ffeb3b;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            line-height: 1.6;
             font-size: 1.1em;
-            white-space: pre-wrap;
-            color: #e0e0e0;
+            white-space: pre-wrap; /* Preserves line breaks in the message */
+            box-shadow: inset 0 0 10px rgba(255, 255, 0, 0.5);
         }
         
-        /* Aesthetic Scrollbar */
+        /* Aesthetic Scrollbar (for webkit browsers) */
         #messageBox::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
         #messageBox::-webkit-scrollbar-thumb {
-            background-color: #00ffff;
-            border-radius: 3px;
+            background-color: #ffeb3b;
+            border-radius: 10px;
         }
         #messageBox::-webkit-scrollbar-track {
             background: transparent;
         }
 
+        /* Footer/Sign-off */
         #signoff {
             margin-top: 20px;
             font-size: 1.2em;
             font-style: italic;
-            color: #ff99ff;
+            color: #ffeb3b;
         }
 
     </style>
 </head>
 <body>
-    <canvas id="fireworkCanvas"></canvas>
+
+    <canvas id="birthdayCanvas"></canvas>
 
     <div id="greetingContainer">
         <h1>Happy Birthday, Bachha! call karu?</h1>
-        
-        <h2>Tera din itna sahi jaye, aaj hi nahi har roj!</h2>
+        <h2>Tera din itna sahi jaye aaj hi nahi har roj </h2>
         
         <div id="messageBox">
-            <p><strong>Hey Sid,</strong></p>
+            Hey sid,
             
-            <p>I remember all the laughs, the late-night talks, and the silly adventures, ups and downs we've shared. You bring so much light and color into the world, and I feel so lucky to have you in my life.</p>
+            I remember all the laughs, the late-night talks, and the silly adventures, ups and downs we've shared. You bring so much light and color into the world, and I feel so lucky to have you in my life.
             
-            <p>May your day be filled with all the joy, cake, and **aesthetic beauty** as you want. </p>
+            May your day be filled with all the joy, cake, and aesthetic beauty as you want.
             
-            <p>Here's to another year of friendship, happiness, and chasing dreams! This grand light show is just a small reflection of how brightly you shine.</p>
-
-            <p>Lots of love girlie, <br>[Your bestie always]</p>
+            Here's to another year of friendship, happiness, and chasing dreams!
+            
+            Lots of love girlie,
+            
+            [Your bestie always]
         </div>
 
         <div id="signoff">
@@ -132,13 +136,13 @@
     </div>
 
     <script>
-        // --- High-Quality Firework Particle System with Reflection ---
+        // --- Confetti/Particle System for Firecracker Effect ---
 
-        const canvas = document.getElementById('fireworkCanvas');
+        const canvas = document.getElementById('birthdayCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
-        const waterLevel = 0.7; // Water surface starts at 70% down the screen
 
+        // Set up the canvas dimensions
         function resizeCanvas() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -146,165 +150,77 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        const fireworks = [];
         const particles = [];
-        const reflections = []; 
-        const gravity = 0.08;
-        
-        // Utility to get a random aesthetic color
-        function randomColor() {
-            const hue = Math.floor(Math.random() * 360);
-            return `hsl(${hue}, 100%, 70%)`;
-        }
+        const numParticles = 50;
+        const colors = ['#FFC72C', '#FF3A3A', '#2ECC71', '#3498DB', '#9B59B6', '#F1C40F'];
 
-        // Particle Class (for the actual sparks)
         class Particle {
-            constructor(x, y, color, speed, angle, isRocket = false, isReflection = false) {
+            constructor(x, y, color) {
                 this.x = x;
                 this.y = y;
-                this.color = color;
-                this.isRocket = isRocket;
-                this.isReflection = isReflection;
-                this.life = isRocket ? 300 : Math.random() * 60 + 30; 
-                this.originalY = y; 
-
+                this.color = color || colors[Math.floor(Math.random() * colors.length)];
+                this.radius = Math.random() * 3 + 1;
                 this.velocity = {
-                    x: Math.cos(angle) * speed,
-                    y: Math.sin(angle) * speed
+                    x: (Math.random() - 0.5) * 5,
+                    y: (Math.random() - 0.5) * 5
                 };
-                this.friction = isReflection ? 0.97 : 0.99; 
-                this.alpha = isReflection ? 0.6 : 1; 
-                this.radius = Math.random() * 2 + 1; 
-            }
-
-            update() {
-                this.velocity.x *= this.friction;
-                this.velocity.y *= this.friction;
-                this.velocity.y += gravity;
-                this.x += this.velocity.x;
-                this.y += this.velocity.y;
-                
-                if (!this.isRocket) {
-                    this.alpha -= (this.isReflection ? 0.008 : 0.012); 
-                }
-                this.life--;
-
-                // If a non-reflection particle hits water, create its reflection
-                if (!this.isReflection && this.y >= height * waterLevel && !this.reflected) {
-                    this.reflected = true; 
-                    const reflectionVelocityX = this.velocity.x * 0.8;
-                    const reflectionVelocityY = -this.velocity.y * 0.5; 
-
-                    reflections.push(new Particle(
-                        this.x, 
-                        height * waterLevel + (this.y - height * waterLevel), 
-                        this.color, 
-                        Math.sqrt(reflectionVelocityX * reflectionVelocityX + reflectionVelocityY * reflectionVelocityY), 
-                        Math.atan2(reflectionVelocityY, reflectionVelocityX), 
-                        false, true 
-                    ));
-                }
+                this.gravity = 0.08;
+                this.friction = 0.99;
+                this.opacity = 1;
+                this.life = 100;
             }
 
             draw() {
                 ctx.save();
-                ctx.globalAlpha = Math.max(0, this.alpha); 
-                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
                 ctx.fill();
                 ctx.restore();
             }
-        }
-
-        // Firework Rocket Class (the trail going up)
-        class Firework {
-            constructor() {
-                this.x = Math.random() * width * 0.8 + width * 0.1;
-                this.y = height;
-                this.targetY = Math.random() * height * 0.5; 
-                this.color = randomColor();
-                this.speed = Math.random() * 3 + 5; 
-                this.exploded = false;
-                this.angle = -Math.PI / 2;
-                
-                this.rocket = new Particle(this.x, this.y, this.color, this.speed, this.angle, true);
-            }
 
             update() {
-                if (!this.exploded) {
-                    this.rocket.update();
-                    
-                    if (this.rocket.y <= this.targetY) {
-                        this.explode();
-                        this.exploded = true;
-                    }
-                }
+                this.velocity.y += this.gravity;
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.opacity -= 0.01;
+                this.life--;
             }
-            
-            explode() {
-                const count = Math.floor(Math.random() * 150) + 100; 
-                const explosionSpeed = Math.random() * 4 + 2;
-                for (let i = 0; i < count; i++) {
-                    const angle = (Math.PI * 2) * (i / count);
-                    particles.push(new Particle(this.rocket.x, this.rocket.y, this.color, explosionSpeed, angle));
-                }
+        }
+
+        function createExplosion(x, y) {
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle(x, y));
             }
         }
 
         // Animation Loop
         function animate() {
             requestAnimationFrame(animate);
-
-            // Clear with a darker, more opaque fill for better trail effects and darker sky
-            ctx.fillStyle = `rgba(0, 0, 0, 0.15)`; 
+            // Clear only a portion of the screen to create a trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, width, height);
 
-            // Draw the water surface (simulating the reflection base)
-            const waterGradient = ctx.createLinearGradient(0, height * waterLevel, 0, height);
-            waterGradient.addColorStop(0, 'rgba(0, 50, 100, 0.4)'); 
-            waterGradient.addColorStop(1, 'rgba(0, 20, 40, 0.6)');
-            ctx.fillStyle = waterGradient;
-            ctx.fillRect(0, height * waterLevel, width, height * (1 - waterLevel));
-
-            // Update and draw fireworks (rockets)
-            for (let i = fireworks.length - 1; i >= 0; i--) {
-                fireworks[i].update();
-                if (!fireworks[i].exploded) {
-                    fireworks[i].rocket.draw();
-                }
-                if (fireworks[i].exploded && fireworks[i].rocket.alpha <= 0.05) {
-                    fireworks.splice(i, 1);
-                }
-            }
-
-            // Update and draw explosion particles
             for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.update();
-                p.draw();
-                if (p.alpha <= 0 || p.life <= 0) {
-                    particles.splice(i, 1);
-                }
-            }
+                const particle = particles[i];
+                particle.update();
+                particle.draw();
 
-            // Update and draw reflection particles
-            for (let i = reflections.length - 1; i >= 0; i--) {
-                const r = reflections[i];
-                r.update();
-                r.draw();
-                if (r.alpha <= 0 || r.life <= 0) {
-                    reflections.splice(i, 1);
+                if (particle.opacity <= 0 || particle.life <= 0) {
+                    particles.splice(i, 1);
                 }
             }
         }
 
-        // Periodically launch new fireworks
+        // Periodically launch 'fireworks' (confetti explosions)
         setInterval(() => {
-            if (fireworks.length < 10) { 
-                fireworks.push(new Firework());
-            }
-        }, 300); 
+            const randomX = Math.random() * width;
+            const randomY = Math.random() * height * 0.8; // Focus near the top
+            createExplosion(randomX, randomY);
+        }, 1000); // New explosion every second
 
         // Start the animation
         animate();
