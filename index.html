@@ -1,204 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BST Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Siddhi! </title>
     <style>
-        body { text-align: center; font-family: Arial; }
-        canvas { border: 1px solid black; background: #f9f9f9; margin-top: 20px; }
-        input, button { font-size: 16px; margin: 5px; }
-        h1, h2, h3 { margin: 5px; }
-        #traversals { font-size: 16px; margin-top: 15px; }
+        /* Aesthetic and Celebratory Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scrollbars for the full-screen effect */
+            background: linear-gradient(135deg, #f06, #4a90e2, #f06); /* Gradient background */
+            font-family: 'Georgia', serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Canvas for the Confetti/Firecracker Effect */
+        #birthdayCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Below the text content */
+        }
+
+        /* Main Greeting Container */
+        #greetingContainer {
+            position: relative;
+            z-index: 10; /* Above the canvas */
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4); /* Slightly transparent overlay for readability */
+            border-radius: 15px;
+            backdrop-filter: blur(5px); /* Aesthetic blur effect */
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.8); /* Golden glow */
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Titles and Text Styling */
+        h1 {
+            font-size: 5em;
+            margin-bottom: 0.1em;
+            color: #ffeb3b; /* Yellow/Gold for celebration */
+            text-shadow: 2px 2px 4px #000;
+            animation: pulse 1.5s infinite alternate; /* Gentle pulsing effect */
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #fff;
+            margin-top: 0;
+            text-shadow: 1px 1px 3px #000;
+        }
+        
+        /* Scrollable Message Box */
+        #messageBox {
+            max-height: 30vh;
+            max-width: 80vw;
+            overflow-y: auto; /* Make it scrollable */
+            text-align: left;
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #ffeb3b;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            line-height: 1.6;
+            font-size: 1.1em;
+            white-space: pre-wrap; /* Preserves line breaks in the message */
+            box-shadow: inset 0 0 10px rgba(255, 255, 0, 0.5);
+        }
+        
+        /* Aesthetic Scrollbar (for webkit browsers) */
+        #messageBox::-webkit-scrollbar {
+            width: 8px;
+        }
+        #messageBox::-webkit-scrollbar-thumb {
+            background-color: #ffeb3b;
+            border-radius: 10px;
+        }
+        #messageBox::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* Footer/Sign-off */
+        #signoff {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-style: italic;
+            color: #ffeb3b;
+        }
+
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <h1>MIT-ADT University</h1>
-    <h2>DSA Jury 1</h2>
-    <h3>Binary Search Tree Visualization</h3>
-    <h4>Name: Shubham Alapure, Class: SY-2, Rn: 65, En: ADT24SOCB1153</h4>
 
-    <!-- Input -->
-    <input type="number" id="nodeInput" placeholder="Enter node value">
-    <button onclick="insertNode()">Insert</button>
-    <button onclick="searchNode()">Search</button>
-    <button onclick="deleteNode()">Delete</button>
+    <canvas id="birthdayCanvas"></canvas>
 
-    <canvas id="bstCanvas" width="900" height="600"></canvas>
-    <div id="traversals">
-        Inorder: []<br>
-        Preorder: []<br>
-        Postorder: []
+    <div id="greetingContainer">
+        <h1>Happy Birthday, Bachha! call karu?</h1>
+        <h2>Tera din itna sahi jaye aaj hi nahi har roj </h2>
+        
+        <div id="messageBox">
+            Hey sid,
+            
+            I remember all the laughs, the late-night talks, and the silly adventures we've shared. You bring so much light and color into the world, and I feel so lucky to have you in my life.
+            
+            May your day be filled with all the joy, cake, and aesthetic beauty as you want.
+            
+            Here's to another year of friendship, happiness, and chasing dreams!
+            
+            Lots of love girlie,
+            
+            [Your bestie always]
+        </div>
+
+        <div id="signoff">
+            ✨ Niche scroll kr! ✨
+        </div>
     </div>
 
     <script>
-        const canvas = document.getElementById("bstCanvas");
-        const ctx = canvas.getContext("2d");
-        const traversalsDiv = document.getElementById("traversals");
+        // --- Confetti/Particle System for Firecracker Effect ---
 
-        class Node {
-            constructor(value, x, y) {
-                this.value = value;
+        const canvas = document.getElementById('birthdayCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // Set up the canvas dimensions
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const numParticles = 50;
+        const colors = ['#FFC72C', '#FF3A3A', '#2ECC71', '#3498DB', '#9B59B6', '#F1C40F'];
+
+        class Particle {
+            constructor(x, y, color) {
                 this.x = x;
                 this.y = y;
-                this.left = null;
-                this.right = null;
+                this.color = color || colors[Math.floor(Math.random() * colors.length)];
+                this.radius = Math.random() * 3 + 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 5,
+                    y: (Math.random() - 0.5) * 5
+                };
+                this.gravity = 0.08;
+                this.friction = 0.99;
+                this.opacity = 1;
+                this.life = 100;
             }
-        }
 
-        let root = null;
-        const nodeRadius = 20;
-        const levelGap = 80;
-
-        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
-        // ---------- INSERT ----------
-        async function insert(value) {
-            root = await _insert(root, value, canvas.width / 2, 50, canvas.width / 4);
-            drawTree();
-            updateTraversals();
-        }
-
-        async function _insert(node, value, x, y, offset) {
-            if (!node) {
-                let newNode = new Node(value, x, y);
-                await drawTree(newNode);
-                return newNode;
-            }
-            await drawTree(node);
-            await sleep(400);
-
-            if (value < node.value) node.left = await _insert(node.left, value, x - offset, y + levelGap, offset / 2);
-            else if (value > node.value) node.right = await _insert(node.right, value, x + offset, y + levelGap, offset / 2);
-            return node;
-        }
-
-        // ---------- SEARCH ----------
-        async function search(value) {
-            await _search(root, value);
-        }
-
-        async function _search(node, value) {
-            if (!node) {
-                alert("Value not found");
-                return null;
-            }
-            await drawTree(node);
-            await sleep(500);
-            if (node.value === value) {
-                alert("Value found: " + value);
-                return node;
-            } else if (value < node.value) return _search(node.left, value);
-            else return _search(node.right, value);
-        }
-
-        function searchNode() {
-            const input = document.getElementById("nodeInput");
-            const value = parseInt(input.value);
-            if (!isNaN(value)) search(value);
-            input.value = "";
-            input.focus();
-        }
-
-        // ---------- DELETE ----------
-        async function deleteBST(node, value) {
-            if (!node) return null;
-            await drawTree(node);
-            await sleep(400);
-            if (value < node.value) node.left = await deleteBST(node.left, value);
-            else if (value > node.value) node.right = await deleteBST(node.right, value);
-            else {
-                // Node to delete
-                if (!node.left) return node.right;
-                if (!node.right) return node.left;
-
-                // Node with two children
-                let minLargerNode = node.right;
-                while (minLargerNode.left) minLargerNode = minLargerNode.left;
-                node.value = minLargerNode.value;
-                node.right = await deleteBST(node.right, minLargerNode.value);
-            }
-            return node;
-        }
-
-        async function deleteNode() {
-            const input = document.getElementById("nodeInput");
-            const value = parseInt(input.value);
-            if (!isNaN(value)) {
-                root = await deleteBST(root, value);
-                drawTree();
-                updateTraversals();
-            }
-            input.value = "";
-            input.focus();
-        }
-
-        // ---------- DRAW TREE ----------
-        async function drawTree(highlightNode = null) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            _drawNode(root, highlightNode);
-        }
-
-        function _drawNode(node, highlightNode) {
-            if (!node) return;
-            if (node.left) {
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
                 ctx.beginPath();
-                ctx.moveTo(node.x, node.y);
-                ctx.lineTo(node.left.x, node.left.y);
-                ctx.stroke();
-                _drawNode(node.left, highlightNode);
-            }
-            if (node.right) {
-                ctx.beginPath();
-                ctx.moveTo(node.x, node.y);
-                ctx.lineTo(node.right.x, node.right.y);
-                ctx.stroke();
-                _drawNode(node.right, highlightNode);
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
             }
 
-            ctx.beginPath();
-            ctx.fillStyle = (highlightNode && node === highlightNode) ? "yellow" : "lightblue";
-            ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.stroke();
-            ctx.fillStyle = "black";
-            ctx.font = "14px Arial";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(node.value, node.x, node.y);
+            update() {
+                this.velocity.y += this.gravity;
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.opacity -= 0.01;
+                this.life--;
+            }
         }
 
-        // ---------- TRAVERSALS ----------
-        function updateTraversals() {
-            const inorder = [];
-            const preorder = [];
-            const postorder = [];
-
-            function inOrder(node) { if(!node) return; inOrder(node.left); inorder.push(node.value); inOrder(node.right);}
-            function preOrder(node) { if(!node) return; preorder.push(node.value); preOrder(node.left); preOrder(node.right);}
-            function postOrder(node) { if(!node) return; postOrder(node.left); postOrder(node.right); postorder.push(node.value);}
-
-            inOrder(root); preOrder(root); postOrder(root);
-
-            traversalsDiv.innerHTML =
-                `Inorder: [${inorder.join(", ")}]<br>` +
-                `Preorder: [${preorder.join(", ")}]<br>` +
-                `Postorder: [${postorder.join(", ")}]`;
+        function createExplosion(x, y) {
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle(x, y));
+            }
         }
 
-        // ---------- INPUT HANDLING ----------
-        function insertNode() {
-            const input = document.getElementById("nodeInput");
-            const value = parseInt(input.value);
-            if (!isNaN(value)) insert(value);
-            input.value = "";
-            input.focus();
+        // Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            // Clear only a portion of the screen to create a trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const particle = particles[i];
+                particle.update();
+                particle.draw();
+
+                if (particle.opacity <= 0 || particle.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
         }
 
-        // Press Enter for insert
-        document.getElementById("nodeInput").addEventListener("keypress", function(event){
-            if(event.key === "Enter") insertNode();
-        });
+        // Periodically launch 'fireworks' (confetti explosions)
+        setInterval(() => {
+            const randomX = Math.random() * width;
+            const randomY = Math.random() * height * 0.8; // Focus near the top
+            createExplosion(randomX, randomY);
+        }, 1000); // New explosion every second
+
+        // Start the animation
+        animate();
     </script>
 </body>
 </html>
