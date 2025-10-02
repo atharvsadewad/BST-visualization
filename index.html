@@ -1,4 +1,4 @@
-x<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,8 @@ x<!DOCTYPE html>
         body {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Hide scrollbars for the full-screen effect */
+            /* CRITICAL FIX: Removed overflow: hidden so content can scroll if needed */
+            overflow-y: auto; 
             background: linear-gradient(135deg, #f06, #4a90e2, #f06); /* Gradient background */
             font-family: 'Georgia', serif;
             color: white;
@@ -27,20 +28,28 @@ x<!DOCTYPE html>
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Below the text content */
+            z-index: 1; 
         }
 
         /* Main Greeting Container */
         #greetingContainer {
-            position: relative;
-            z-index: 10; /* Above the canvas */
+            /* FIX 1: Use min-height to push the body to full size and allow centering */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            position: relative; /* Keep relative position, but rely on body flexbox for centering */
+            z-index: 10;
             text-align: center;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.4); /* Slightly transparent overlay for readability */
+            background: rgba(0, 0, 0, 0.4); 
             border-radius: 15px;
-            backdrop-filter: blur(5px); /* Aesthetic blur effect */
-            box-shadow: 0 0 30px rgba(255, 255, 0, 0.8); /* Golden glow */
+            backdrop-filter: blur(5px); 
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.8); 
             animation: fadeIn 3s ease-in-out;
+            max-width: 90%; /* Ensure it fits on smaller screens */
         }
 
         @keyframes fadeIn {
@@ -52,9 +61,9 @@ x<!DOCTYPE html>
         h1 {
             font-size: 5em;
             margin-bottom: 0.1em;
-            color: #ffeb3b; /* Yellow/Gold for celebration */
+            color: #ffeb3b; 
             text-shadow: 2px 2px 4px #000;
-            animation: pulse 1.5s infinite alternate; /* Gentle pulsing effect */
+            animation: pulse 1.5s infinite alternate; 
         }
 
         @keyframes pulse {
@@ -71,9 +80,10 @@ x<!DOCTYPE html>
         
         /* Scrollable Message Box */
         #messageBox {
-            max-height: 30vh;
-            max-width: 80vw;
-            overflow-y: auto; /* Make it scrollable */
+            /* FIX 2: Set a more restrictive max-height relative to the viewport */
+            max-height: 200px; 
+            max-width: 100%; 
+            overflow-y: auto; /* This is correct for enabling scrolling */
             text-align: left;
             margin-top: 20px;
             padding: 15px;
@@ -82,8 +92,10 @@ x<!DOCTYPE html>
             background: rgba(255, 255, 255, 0.1);
             line-height: 1.6;
             font-size: 1.1em;
-            white-space: pre-wrap; /* Preserves line breaks in the message */
+            white-space: pre-wrap; 
             box-shadow: inset 0 0 10px rgba(255, 255, 0, 0.5);
+            /* Added margin-bottom to ensure space below the scrollbox */
+            margin-bottom: 10px; 
         }
         
         /* Aesthetic Scrollbar (for webkit browsers) */
@@ -100,10 +112,10 @@ x<!DOCTYPE html>
 
         /* Footer/Sign-off */
         #signoff {
-            margin-top: 20px;
             font-size: 1.2em;
             font-style: italic;
             color: #ffeb3b;
+            margin-bottom: 20px; /* Ensure space at the bottom */
         }
 
     </style>
